@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/stefsiekman/4-in-a-row-3d-server/issues"
   },
-  "homepage": "https://github.com/stefsiekman/4-in-a-row-3d-server#readme"
+  "homepage": "https://github.com/stefsiekman/4-in-a-row-3d-server#readme",
+  "dependencies": {
+    "express": "4.16.2"
+  }
 }
