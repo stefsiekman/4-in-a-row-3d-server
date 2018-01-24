@@ -1,5 +1,6 @@
 const pg = require("pg")
 const error = require("../../util/error")
+const validator = require("../../util/validator")
 const ai = require("../../datatypes/ai")
 const uuid = require("uuid/v4")
 const sha = require("sha256")
@@ -7,12 +8,16 @@ const sha = require("sha256")
 module.exports = (req, res) => {
 
     // Validate the provided name
-    // TODO: implement name validation
     var name = req.body.name
+    if (!validator.validAIName(name)) {
+        error.respondJson(res, 3)
+        return
+    }
 
     pg.connect(process.env.DATABASE_URL, (err, client, done) => {
         if (err) {
             error.respondJson(res, 1)
+            return
         } else {
             // Generate a key
             var key = sha(uuid())

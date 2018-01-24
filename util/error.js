@@ -1,7 +1,8 @@
 // List of errors by code
 const errors = [
     "Database connection error",
-    "Functionality not supported"
+    "Functionality not supported",
+    "Invalid AI name"
 ]
 
 module.exports = {
