@@ -5,7 +5,7 @@ const app = express()
 
 app.use(express.json())
 
-app.use("/ai", require("./routes/ai/main"))
+app.use("/ai", require("./routes/ai/router"))
 
 app.get("/", (req, res) => {
     res.json({ message: "Hello, world!" })
