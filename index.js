@@ -3,6 +3,8 @@ const PORT = process.env.PORT || 5000
 
 const app = express()
 
+app.use(express.json())
+
 app.use("/app", require("./routes/ai/main"))
 
 app.get("/", (req, res) => {
