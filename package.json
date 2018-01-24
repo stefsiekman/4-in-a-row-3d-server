@@ -1,0 +1,20 @@
+{
+  "name": "4-in-a-row-3d-server",
+  "version": "1.0.0",
+  "description": "The server to host an artificial intelligence based competition over \"4 in a row 3D\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stefsiekman/4-in-a-row-3d-server.git"
+  },
+  "keywords": [],
+  "author": "Stef Siekman <s.a.p.siekman@student.tudelft.nl>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stefsiekman/4-in-a-row-3d-server/issues"
+  },
+  "homepage": "https://github.com/stefsiekman/4-in-a-row-3d-server#readme"
+}
