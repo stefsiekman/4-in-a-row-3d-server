@@ -19,6 +19,7 @@
     },
     "homepage": "https://github.com/stefsiekman/4-in-a-row-3d-server#readme",
     "dependencies": {
-        "express": "4.16.2"
+        "express": "4.16.2",
+        "pg": "7.4.1"
     }
 }
