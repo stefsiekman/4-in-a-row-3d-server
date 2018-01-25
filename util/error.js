@@ -12,7 +12,8 @@ const errors = [
     "The provided AI is not to move (unsure whether other AI started)",
     "AI A has to make the first move",
     "Missing position",
-    "Invalid position"
+    "Invalid position",
+    "Impossible move (already for balls at position)"
 ]
 
 module.exports = {

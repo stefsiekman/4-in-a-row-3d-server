@@ -2,6 +2,7 @@ const pg = require("pg")
 const error = require("../../util/error")
 const movesFromRows = require("../../datatypes/move").movesFromRows
 const listMovesByGame = require("../../datatypes/move").listByGame
+const mechanics = require("../../util/game-mechanics")
 
 function updateStartedMove(res, client, move, callback) {
     // Prepare and execute query
@@ -74,6 +75,12 @@ module.exports = (req, res) => {
 
         // Fetch the moves from this game
         listMovesByGame(res, client, game, (moves) => {
+            // Check whether move is possible
+            if (!mechanics.possibleMove(moves, req.body.move.position)) {
+                error.respondJson(res, 14)
+                return
+            }
+
             // If there aren't any moves yet
             if (moves.length < 1) {
                 // Check that this is AI A
