@@ -8,13 +8,8 @@ module.exports = (req, res) => {
         if (err) {
             error.respondJson(res, 1)
         } else {
-            client.query("SELECT * FROM moves;", (err, result) => {
-                done();
-                if (err) {
-                    error.respondJson(res, 1)
-                } else {
-                    res.json(move.movesFromRows(result.rows))
-                }
+            move.listByGame(res, client, req.params.game, (moves) => {
+                res.json(moves)
             })
         }
     })

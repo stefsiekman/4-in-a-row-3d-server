@@ -5,7 +5,14 @@ const errors = [
     "Invalid AI name",
     "Missing AI id or key",
     "Invalid AI credentials",
-    "Missing game id"
+    "Missing game id",
+    "Game in no longer in progress",
+    "The provided AI does not play in this game",
+    "The provided AI is not to move (other AI started)",
+    "The provided AI is not to move (unsure whether other AI started)",
+    "AI A has to make the first move",
+    "Missing position",
+    "Invalid position"
 ]
 
 module.exports = {
