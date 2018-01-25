@@ -12,6 +12,22 @@ class Move {
         this.completed = completed
     }
 
+    finishTied(res, client, callback) {
+        // Prepare and execute query
+        var sql = "UPDATE games SET status=3 WHERE id=$1 RETURNING *;"
+        client.query(sql, (err, result) => {
+            // Check for errors
+            if (err || !result.rows[0]) {
+                error.respondJson(res, 1)
+                return
+            }
+
+            // Update this instance's status, and call callback
+            this.status = 3
+            callback()
+        })
+    }
+
 }
 
 // Method for extracting a list of Move instances from database rows

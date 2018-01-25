@@ -56,8 +56,11 @@ function insertUnstartedMove(res, client, game, move, prevMove, moves,
 function afterMoveChecks(res, client, game, moves, callback) {
     // Check if the game is over
     if (mechanics.gameIsOver(moves)) {
-        // TODO: update the game status
-        callback(game, moves)
+        // Finish the game without winner, or give up-er
+        game.finishTied(res, client, () => {
+            callback(game, moves)
+        })
+
         return
     }
 
