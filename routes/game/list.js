@@ -1,5 +1,6 @@
 const pg = require("pg")
-const ai = require("../../datatypes/ai")
+const error = require("../../util/error")
+const game = require("../../datatypes/game")
 
 module.exports = (req, res) => {
 
@@ -7,12 +8,12 @@ module.exports = (req, res) => {
         if (err) {
             error.respondJson(res, 1)
         } else {
-            client.query("SELECT * FROM ais;", (err, result) => {
+            client.query("SELECT * FROM games;", (err, result) => {
                 done();
                 if (err) {
                     error.respondJson(res, 1)
                 } else {
-                    res.json(ai.aisFromRows(result.rows))
+                    res.json(game.gamesFromRows(result.rows))
                 }
             })
         }
