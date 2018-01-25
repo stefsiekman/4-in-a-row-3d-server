@@ -51,8 +51,10 @@ module.exports = (res, aiId, callback) => {
         }
 
         // Get all the open games (should be 1 or 0)
-        var sql = "SELECT * FROM games WHERE status=1 AND ai_b IS NULL;"
-        client.query(sql, (err, result) => {
+        var sql = "SELECT * FROM games WHERE status=1 AND ai_b IS NULL "
+                + "AND ai_a != $1;"
+        var values = [ aiId ]
+        client.query(sql, values, (err, result) => {
             // Check for errors
             if (err) {
                 throw err

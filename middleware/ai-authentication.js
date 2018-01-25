@@ -1,4 +1,4 @@
-const error = require("./error")
+const error = require("../util/error")
 const sha = require("sha256")
 const pg = require("pg")
 

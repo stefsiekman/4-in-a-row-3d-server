@@ -4,7 +4,8 @@ const errors = [
     "Functionality not supported",
     "Invalid AI name",
     "Missing AI id or key",
-    "Invalid AI credentials"
+    "Invalid AI credentials",
+    "Missing game id"
 ]
 
 module.exports = {
