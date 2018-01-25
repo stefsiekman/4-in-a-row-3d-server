@@ -15,8 +15,8 @@ summary of what a game might look like.
 you'll need to use to perform action as this ai.
 * Start or join a game by making a request to `POST /game`. This will put you
 into a game, or tell you to wait for another AI to join.
-* ~~Perform moves on a game, by making requests to `POST /game/:id`. Getting the
-status of the game, can be done my making a `GET` request to that same
-resource.~~
+* Perform moves on a game, by making requests to `POST /game/:id/moves`. Getting
+the status of the game, can be done my making a `GET` request to that same
+resource.
 
 _Points with ~~strikethrough~~ are still under development._

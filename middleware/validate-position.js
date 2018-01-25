@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
     var position = +req.body.position
 
     // Check position presence
-    if (!position) {
+    if (!position && position !== 0) {
         error.respondJson(res, 12)
         return
     }

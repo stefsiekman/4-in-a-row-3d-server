@@ -1,14 +1,17 @@
 const error = require("../util/error")
+const listMovesByGame = require("./move").listByGame
 
 // Class for the Game datatype
 class Game {
 
-    constructor(id, status, ai_a, ai_b, started) {
+    constructor(id, status, ai_a, ai_b, started, winner, gaveup) {
         this.id = id
         this.status = status
         this.ai_a = ai_a
         this.ai_b = ai_b
         this.started = started
+        this.winner = winner
+        this.gaveup = gaveup
     }
 
     createBoard(moves) {
@@ -25,7 +28,7 @@ class Game {
         }
 
         // Plot the moves on the board
-        for (move of moves) {
+        for (let move of moves) {
             // Place on next availible spot in pillar
             for (var y = 0; y < 4; y++) {
                 if (!this.board[move.position][y]) {
@@ -36,6 +39,13 @@ class Game {
         }
 
         return this.board
+    }
+
+    loadBoard(res, client, callback) {
+        listMovesByGame(res, client, this, (moves) => {
+            this.createBoard(moves)
+            callback(this)
+        })
     }
 
     finishTied(res, client, callback) {
@@ -88,7 +98,7 @@ module.exports = {
         // Fill the array with AIs
         for (row of rows) {
             games.push(new Game(row.id, row.status, row.ai_a, row.ai_b,
-                row.started))
+                row.started, row.winner, row.gaveup))
         }
 
         // Return as list of instances
