@@ -21,11 +21,11 @@ module.exports = (req, res, next) => {
             error.respondJson(res, 1)
         } else {
             // Prepare the query
-            var sql = "SELECT key FROM ais WHERE id = $1;";
-            var values = [aiId];
+            var sql = "SELECT key FROM ais WHERE id = $1;"
+            var values = [aiId]
 
             client.query(sql, values, (err, result) => {
-                done();
+                done()
 
                 if (err) {
                     error.respondJson(res, 1)
