@@ -12,6 +12,10 @@ module.exports = {
         }
 
         return count < 4
+    },
+
+    gameIsOver: (moves) => {
+        return moves.length >= 4 * 4 * 4
     }
 
 }

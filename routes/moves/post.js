@@ -4,7 +4,7 @@ const movesFromRows = require("../../datatypes/move").movesFromRows
 const listMovesByGame = require("../../datatypes/move").listByGame
 const mechanics = require("../../util/game-mechanics")
 
-function updateStartedMove(res, client, move, callback) {
+function updateStartedMove(res, client, game, move, moves, callback) {
     // Prepare and execute query
     var sql = "UPDATE moves SET position=$1, completed=CURRENT_TIMESTAMP "
             + "WHERE id=$2 RETURNING *;"
@@ -16,12 +16,16 @@ function updateStartedMove(res, client, move, callback) {
             return
         }
 
-        // Nothing to do, just call callback
-        callback(movesFromRows(result.rows)[0])
+        // Update the moves array
+        moves[moves.length - 1] = movesFromRows(result.rows)[0]
+
+        // Do checks after move
+        afterMoveChecks(res, client, game, moves, callback)
     })
 }
 
-function insertUnstartedMove(res, client, game, move, prevMove, callback) {
+function insertUnstartedMove(res, client, game, move, prevMove, moves,
+        callback) {
     // The SQL is the same for every new move
     var sql = "INSERT INTO moves (game, ai, position, started, completed) "
                 + " VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP) RETURNING *;"
@@ -41,9 +45,24 @@ function insertUnstartedMove(res, client, game, move, prevMove, callback) {
             return
         }
 
-        // Nothing to do, just call callback
-        callback(movesFromRows(result.rows)[0])
+        // Update the array of moves
+        moves.push(movesFromRows(result.rows)[0])
+
+        // Do checks after move
+        afterMoveChecks(res, client, game, moves, callback)
     })
+}
+
+function afterMoveChecks(res, client, game, moves, callback) {
+    // Check if the game is over
+    if (mechanics.gameIsOver(moves)) {
+        // TODO: update the game status
+        callback(game, moves)
+        return
+    }
+
+    // Otherwise, just call the callback
+    callback(game, moves)
 }
 
 // Posting new moves to a game
@@ -63,6 +82,14 @@ module.exports = (req, res) => {
     if (aiId != game.ai_a && aiId != game.ai_b) {
         error.respondJson(res, 8)
         return
+    }
+
+    var finalCallback = (game, moves) => {
+        res.json({
+            game: game,
+            move: moves[moves.length - 1],
+            moves: moves
+        })
     }
 
     // Fetch the move information
@@ -92,10 +119,9 @@ module.exports = (req, res) => {
                 // Otherwise, this must be the unstarted move of AI A
 
                 insertUnstartedMove(res, client, game, req.body.move,
-                        undefined, (insertedMove) => {
-                    res.json(insertedMove)
-                })
+                        undefined, [], finalCallback)
             } else {
+                // If there are moves already
                 var lastMove = moves[moves.length - 1]
 
                 // If we're waiting for the other AI's (started) move
@@ -115,19 +141,15 @@ module.exports = (req, res) => {
                     // Update the position of the last move, to update in database
                     lastMove.position = +req.body.position
 
-                    updateStartedMove(res, client, lastMove, (updatedMove) => {
-                        // Send the updated move to the client
-                        res.json(updatedMove)
-                    })
+                    updateStartedMove(res, client, game, lastMove, moves,
+                        finalCallback)
 
                     return
                 }
 
                 // Must be provided AI turn, but the move wasn't started explicitly
                 insertUnstartedMove(res, client, game, req.body.move,
-                        lastMove, (insertedMove) => {
-                    res.json(insertedMove)
-                })
+                        lastMove, moves, finalCallback)
             }
         })
     })
