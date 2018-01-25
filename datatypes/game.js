@@ -9,6 +9,31 @@ class Game {
         this.started = started
     }
 
+    createBoard(moves) {
+        // Create an empty board
+        this.board = []
+
+        // 16 pillar of 4 in height
+        for (var pos = 0; pos < 16; pos++) {
+            var pillar = []
+            for (var y = 0; y < 4; y++) {
+                pillar.push(undefined)
+            }
+            this.board.push(pillar)
+        }
+
+        // Plot the moves on the board
+        for (move of moves) {
+            // Place on next availible spot in pillar
+            for (var y = 0; y < 4; y++) {
+                if (!this.board[move.position][y]) {
+                    this.board[move.position][y] = move.ai
+                    break
+                }
+            }
+        }
+    }
+
 }
 
 module.exports = {

@@ -54,6 +54,8 @@ function insertUnstartedMove(res, client, game, move, prevMove, moves,
 }
 
 function afterMoveChecks(res, client, game, moves, callback) {
+    game.createBoard(moves)
+
     // Check if the game is over
     if (mechanics.gameIsOver(moves)) {
         // Finish the game without winner, or give up-er
