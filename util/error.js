@@ -2,7 +2,9 @@
 const errors = [
     "Database connection error",
     "Functionality not supported",
-    "Invalid AI name"
+    "Invalid AI name",
+    "Missing AI id or key",
+    "Invalid AI credentials"
 ]
 
 module.exports = {
