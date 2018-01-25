@@ -56,6 +56,17 @@ function insertUnstartedMove(res, client, game, move, prevMove, moves,
 function afterMoveChecks(res, client, game, moves, callback) {
     game.createBoard(moves)
 
+    // Check if the game is won
+    var winner = mechanics.gameIsWon(moves)
+    if (winner) {
+        // Finish the game with the winner
+        game.finishWon(res, client, winner, () => {
+            callback(game, moves)
+        })
+
+        return
+    }
+
     // Check if the game is over
     if (mechanics.gameIsOver(moves)) {
         // Finish the game without winner, or give up-er

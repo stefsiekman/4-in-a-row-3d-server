@@ -1,3 +1,5 @@
+const error = require("../util/error")
+
 // Class for the Game datatype
 class Game {
 
@@ -32,6 +34,43 @@ class Game {
                 }
             }
         }
+
+        return this.board
+    }
+
+    finishTied(res, client, callback) {
+        // Prepare and execute query
+        var sql = "UPDATE games SET status=3 WHERE id=$1 RETURNING *;"
+        var values = [ this.id ]
+        client.query(sql, values, (err, result) => {
+            // Check for errors
+            if (err || !result.rows[0]) {
+                error.respondJson(res, 1)
+                return
+            }
+
+            // Update this instance's status, and call callback
+            this.status = 3
+            callback()
+        })
+    }
+
+    finishWon(res, client, winner, callback) {
+        // Prepare and execute query
+        var sql = "UPDATE games SET status=3, winner=$1 WHERE id=$2 "
+                + "RETURNING *;"
+        var values = [ +winner, this.id ]
+        client.query(sql, values, (err, result) => {
+            // Check for errors
+            if (err || !result.rows[0]) {
+                error.respondJson(res, 1)
+                return
+            }
+
+            // Update this instance's status, and call callback
+            this.status = 3
+            callback()
+        })
     }
 
 }
