@@ -42,13 +42,28 @@ $(() => {
         }
     }
 
+    function generateDoMoveTable() {
+        var $tableBody = $("#do-move-table tbody")
+
+        // Add buttons
+        for (var y = 3; y >= 0; y--) {
+            var $row = $("<tr>")
+            for (var x = 0; x < 4; x++) {
+                var $button = $("<button>").addClass("btn btn-default do-move-button").html("" + (x + y * 4))
+                $row.append($("<td>").html($button))
+            }
+            $tableBody.append($row)
+        }
+    }
+    generateDoMoveTable()
+
     function updateGameInfo(game) {
         $("#gameId").html(`${game.id}`)
         $("#gameAIa").html(`${game.ai_a}`)
         $("#gameAIb").html(`${game.ai_b}`)
         $("#gameStatus").html(`${game.status}`)
-        $("#gameWinner").html(`${game.winner}`)
-        $("#gameGaveup").html(`${game.gaveup}`)
+        $("#gameWinner").html(`${game.winner ? (game.winner == aiId ? "you" : "you're opponent") : "-"}`)
+        $("#gameGaveup").html(`${game.gaveup ? (game.gaveup == aiId ? "you" : "you're opponent") : "-"}`)
         $("#gameStarted").html(`${game.started}`)
 
         updateBoardInfo(game.board)
@@ -68,8 +83,6 @@ $(() => {
             contentType: "application/json",
             timeout: 1000,
             success: (data) => {
-                pushAlert("Game information updated")
-
                 // Save game information
                 game = data
 
@@ -89,14 +102,14 @@ $(() => {
 
     function updateMoveTable(moves) {
         // Clear first
-        var $tableBody = $("#moves tbody")
+        var $tableBody = $("#move-history tbody")
         $tableBody.html("")
 
         // Add information
         for (let move of moves) {
             var $row = $("<tr>")
             $row.append($("<td>").html(move.id))
-            $row.append($("<td>").html(move.ai))
+            $row.append($("<td>").html(move.ai == aiId ? "you" : "you're opponent"))
             $row.append($("<td>").html(move.position))
             $row.append($("<td>").html(move.started))
             $row.append($("<td>").html(move.completed))
@@ -105,7 +118,6 @@ $(() => {
     }
 
     function updateLastestMove(move) {
-        console.log("latest move", move)
         $("#latest-move .ai").html(move.ai == aiId ? "you" : "you're opponent")
         $("#latest-move .position").html(move.position)
         $("#latest-move .completed").html(move.completed)
@@ -125,7 +137,6 @@ $(() => {
             contentType: "application/json",
             timeout: 1000,
             success: (data) => {
-                pushAlert("Move list updated")
                 updateMoveTable(data)
                 updateLastestMove(data.length > 0 ? data[data.length - 1] : {})
             },
@@ -339,6 +350,43 @@ $(() => {
         $("#moves").show()
 
         startGameUpdateInterval()
+    })
+
+    // On making a move
+    $(".do-move-button").click(function(event) {
+        event.preventDefault()
+
+        var data = {
+            ai_id: aiId,
+            ai_key: aiKey,
+            position: +$(this).html()
+        }
+
+        console.log(data)
+
+        $.ajax({
+            type: "POST",
+            url: "/game/" + game.id + "/moves",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json",
+            timeout: 1000,
+            success: (data) => {
+                pushAlert("Move made", "success")
+
+                // Update displayed data
+                updateGameInfo(data.game)
+                updateMoveTable(data.moves)
+                updateLastestMove(data.move)
+            },
+            error: (error) => {
+                if (error.responseText) {
+                    pushAlert(JSON.parse(error.responseText), "danger")
+                } else {
+                    pushAlert("Could not complete your request.", "danger")
+                }
+            }
+        })
     })
 
 })
