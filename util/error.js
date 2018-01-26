@@ -6,7 +6,7 @@ const errors = [
     "Missing AI id or key",
     "Invalid AI credentials",
     "Missing game id",
-    "Game in no longer in progress",
+    "Game is not in progress",
     "The provided AI does not play in this game",
     "The provided AI is not to move (other AI started)",
     "The provided AI is not to move (unsure whether other AI started)",
