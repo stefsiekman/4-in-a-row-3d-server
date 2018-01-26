@@ -19,6 +19,10 @@ $(() => {
         if ($anchor.data("link")) {
             event.preventDefault()
             loadPage($anchor.data("link"))
+
+            // Switch the active class in navigation
+            $("li").removeClass("active")
+            $(this).parent().addClass("active")
         }
     })
 
