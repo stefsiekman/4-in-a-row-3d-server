@@ -50,6 +50,8 @@ $(() => {
         $("#gameWinner").html(`${game.winner}`)
         $("#gameGaveup").html(`${game.gaveup}`)
         $("#gameStarted").html(`${game.started}`)
+
+        updateBoardInfo(game.board)
     }
 
     function updateGameStatus() {
@@ -87,10 +89,66 @@ $(() => {
         setInterval(updateGameStatus, 2500)
     }
 
+    // Function generate the game board
+    function generateGameBoard() {
+        // Four tables, for each Z position
+        for (var z = 0; z < 4; z++) {
+            var $column = $("<div>").addClass("col-sm-3")
+            var $table = $("<table>").addClass("table table-bordered text-center")
+            var $tableBody = $("<tbody>")
+
+            // Add header row
+            var $tableHead = $("<thead>").append($("<tr>").append($("<th>").attr("colspan","4").html(`Z = ${z}`)))
+
+            // Add table rows (Y-axis)
+            for (var y = 3; y >= 0; y--) {
+                var $row = $("<tr>")
+
+                // Add cells (X-axis)
+                for (var x = 0; x < 4; x++) {
+                    var $cell = $("<td>").addClass(`board-cell-${x}${y}${z}`)
+                    $cell.html("&nbsp;")
+                    $row.append($cell)
+                }
+
+                $tableBody.append($row)
+            }
+
+            $table.append($tableHead)
+            $table.append($tableBody)
+            $column.append($table)
+            $("#board").append($column)
+        }
+    }
+    generateGameBoard()
+
+    // Update the board to a state
+    function updateBoardInfo(board) {
+        if (!board) {
+            return
+        }
+
+        for (var x = 0; x < 4; x++) {
+            for (var y = 0; y < 4; y++) {
+                for (var z = 0; z < 4; z++) {
+                    var status = board[x + y * 4][z]
+                    var $cell = $(`.board-cell-${x}${y}${z}`)
+
+                    if (status == aiId) {
+                        $cell.addClass("success")
+                    } else if (status) {
+                        $cell.addClass("danger")
+                    }
+                }
+            }
+        }
+    }
+
     // Hide some elements at the start
     $("#ai-credentials").hide()
     $("#join-game").hide()
     $("#game-status").hide()
+    $("#board").hide()
 
     // AI registration
     $("#formRegister").submit((event) => {
@@ -196,6 +254,7 @@ $(() => {
                 // Switch visibility
                 $("#join-game").hide()
                 $("#game-status").show()
+                $("#board").show()
 
                 startGameUpdateInterval()
             },

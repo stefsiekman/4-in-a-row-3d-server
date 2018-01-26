@@ -4,8 +4,6 @@ const error = require("../../util/error")
 
 module.exports = (req, res) => {
 
-    console.log("Getting one ai", req.params.aiId)
-
     pg.connect(process.env.DATABASE_URL, (err, client, done) => {
         if (err) {
             error.respondJson(res, 1)
