@@ -92,6 +92,16 @@
                                 <span class="glyphicon glyphicon-plus"></span>
                                 Start a new game
                             </button>
+                            <form class="form-inline" id="formContinueGame">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" id="conGameId" placeholder="Game ID"
+                                    min=1 step=1 required>
+                                </div>
+                                <button type="submit" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                    Continue game
+                                </button>
+                            </form>
                         </p>
                     </div>
 
@@ -132,7 +142,7 @@
                     <div id="board" class="row">
                         <div class="col-xs-12">
                             <h3>Board</h3>
-                            <p>The red cells are yours, the blue ones are your opponent's.</p>
+                            <p>The green cells are yours, the red ones are your opponent's.</p>
                         </div>
                     </div>
                 </div>

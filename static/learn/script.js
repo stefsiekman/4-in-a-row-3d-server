@@ -268,4 +268,20 @@ $(() => {
         })
     })
 
+    // Continuing existing game
+    $("#formContinueGame").submit((event) => {
+        event.preventDefault()
+
+        game = { id: $("#conGameId").val() }
+
+        updateGameStatus()
+
+        // Switch visibility
+        $("#join-game").hide()
+        $("#game-status").show()
+        $("#board").show()
+
+        startGameUpdateInterval()
+    })
+
 })
