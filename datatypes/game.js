@@ -79,6 +79,7 @@ class Game {
 
             // Update this instance's status, and call callback
             this.status = 3
+            this.winner = winner
             callback()
         })
     }
