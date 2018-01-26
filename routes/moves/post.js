@@ -113,6 +113,7 @@ module.exports = (req, res) => {
         // Check for errors
         if (err) {
             error.respondJson(res, 1)
+            done()
             return
         }
 
@@ -121,6 +122,7 @@ module.exports = (req, res) => {
             // Check whether move is possible
             if (!mechanics.possibleMove(moves, req.body.move.position)) {
                 error.respondJson(res, 14)
+                done()
                 return
             }
 
@@ -129,6 +131,7 @@ module.exports = (req, res) => {
                 // Check that this is AI A
                 if (aiId != game.ai_a) {
                     error.respondJson(res, 11)
+                    done()
                     return
                 }
 
@@ -136,6 +139,7 @@ module.exports = (req, res) => {
 
                 insertUnstartedMove(res, client, game, req.body.move,
                         undefined, [], finalCallback)
+                done()
             } else {
                 // If there are moves already
                 var lastMove = moves[moves.length - 1]
@@ -143,12 +147,14 @@ module.exports = (req, res) => {
                 // If we're waiting for the other AI's (started) move
                 if (!lastMove.completed && lastMove.ai != aiId) {
                     error.respondJson(res, 9)
+                    done()
                     return
                 }
 
                 // If the other AI hasn't started it's move yet
                 if (lastMove.completed && lastMove.ai == aiId) {
                     error.respondJson(res, 10)
+                    done()
                     return
                 }
 
@@ -160,12 +166,14 @@ module.exports = (req, res) => {
                     updateStartedMove(res, client, game, lastMove, moves,
                         finalCallback)
 
+                    done()
                     return
                 }
 
                 // Must be provided AI turn, but the move wasn't started explicitly
                 insertUnstartedMove(res, client, game, req.body.move,
                         lastMove, moves, finalCallback)
+                done()
             }
         })
     })
