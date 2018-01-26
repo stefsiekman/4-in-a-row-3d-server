@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>FIAR3D - Learn</title>
+
+        <!-- Bootstrap -->
+        <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h1>Four in a row 3D Server API: Learn</h1>
+                    <p class="lead">
+                        On this page you can practise with the API of this AI
+                        battling server. Use this simple interface to play a
+                        game as if you were an AI. Be sure to check your browser
+                        traffic to see which requests are being made to the
+                        server. Then, immitate these requests to automate your
+                        own AI.
+                    </p>
+                    <div id="alerts">
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div id="ai-activate">
+                        <h2>AI registration /login</h2>
+                        <p>
+                            <form class="form-inline" id="formRegister">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="aiName" placeholder="AI Name" required>
+                                </div>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                    Register AI
+                                </button>
+                            </form>
+                        </p>
+                        <p>
+                            <form class="form-inline" id="formLogin">
+                                <div class="form-group">
+                                    <input type="number" class="form-control" id="aiId" placeholder="AI ID"
+                                     min=1 step=1 required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" id="aiKey" placeholder="AI Key" length=64
+                                    required>
+                                </div>
+                                <button type="submit" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-ok"></span> Login
+                                </button>
+                            </form>
+                        </p>
+                    </div>
+
+                    <div id="ai-credentials">
+                        <h2>AI Credentials</h2>
+                        <p>
+                            Save this information if you want to use this AI again. The key can never be recovered
+                            once lost.
+                        </p>
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">ID</label>
+                                <div class="col-sm-10">
+                                    <input type="number" class="form-control" id="aiCredId" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Name</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="aiCredName" readonly>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">Key</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="aiCredKey" readonly>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="/jquery/jquery.min.js"></script>
+
+        <script src="script.js"></script>
+    </body>
+</html>
