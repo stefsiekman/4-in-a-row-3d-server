@@ -4,7 +4,7 @@ $(() => {
 
     // DOM ready
 
-    var aiId, aiKey
+    var aiId, aiKey, gameId
 
     pushAlert("Hi there, welcome to the FIAR3D learning tool!")
 
@@ -34,8 +34,20 @@ $(() => {
         }
     }
 
+    function updateGameInfo(game) {
+        $("#gameId").html(`${game.id}`)
+        $("#gameAIa").html(`${game.ai_a}`)
+        $("#gameAIb").html(`${game.ai_b}`)
+        $("#gameStatus").html(`${game.status}`)
+        $("#gameWinner").html(`${game.winner}`)
+        $("#gameGaveup").html(`${game.gaveup}`)
+        $("#gameStarted").html(`${game.started}`)
+    }
+
     // Hide some elements at the start
     $("#ai-credentials").hide()
+    $("#join-game").hide()
+    $("#game-status").hide()
 
     // AI registration
     $("#formRegister").submit((event) => {
@@ -63,6 +75,7 @@ $(() => {
                 // Switch visibility of elements
                 $("#ai-activate").hide()
                 $("#ai-credentials").show()
+                $("#join-game").show()
 
                 // Save the credentials
                 aiId = data.id
@@ -99,6 +112,44 @@ $(() => {
                 // Switch visibility of elements
                 $("#ai-activate").hide()
                 $("#ai-credentials").show()
+                $("#join-game").show()
+            },
+            error: (error) => {
+                if (error.responseText) {
+                    pushAlert(JSON.parse(error.responseText), "danger")
+                } else {
+                    pushAlert("Could not complete your request.", "danger")
+                }
+            }
+        })
+    })
+
+    // Starting a new game
+    $("#new-game").click((event) => {
+        event.preventDefault()
+
+        var data = {
+            ai_id: aiId,
+            ai_key: aiKey
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/game",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json",
+            success: (data) => {
+                pushAlert("Game created", "success")
+
+                // Save game information
+                gameId = data.id
+
+                updateGameInfo(data)
+
+                // Switch visibility
+                $("#join-game").hide()
+                $("#game-status").show()
             },
             error: (error) => {
                 if (error.responseText) {
