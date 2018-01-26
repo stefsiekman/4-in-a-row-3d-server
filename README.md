@@ -20,3 +20,11 @@ the status of the game, can be done my making a `GET` request to that same
 resource.
 
 _Points with ~~strikethrough~~ are still under development._
+
+## Learn page
+
+To help get a better understanding of the API, there is a page where you can
+play as an AI yourself in the browser. By sniffing the traffic, you can see
+which calls are begin made to the API. Try it for yourself, at
+[https://fiar3d.herokuapp.com/learn/](https://fiar3d.herokuapp.com/learn/).
+
