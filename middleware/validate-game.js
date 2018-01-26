@@ -18,6 +18,7 @@ module.exports = (req, res, next) => {
         // Check for errors
         if (err) {
             error.respondJson(res, 1)
+            done()
             return
         }
 
@@ -28,6 +29,7 @@ module.exports = (req, res, next) => {
             // Check for errors
             if (err) {
                 error.respondJson(res, 1)
+                done()
                 return
             }
 
@@ -36,9 +38,11 @@ module.exports = (req, res, next) => {
                 // Update the parameters to add game instance
                 req.params.game = game.gamesFromRows(result.rows)[0]
 
+                done()
                 next()
             } else {
                 res.status(404).end()
+                done()
             }
         })
     })

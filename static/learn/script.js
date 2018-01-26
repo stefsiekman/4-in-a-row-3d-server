@@ -4,7 +4,7 @@ $(() => {
 
     // DOM ready
 
-    var aiId, aiKey, gameId
+    var aiId, aiKey, game
 
     pushAlert("Hi there, welcome to the FIAR3D learning tool!")
 
@@ -19,7 +19,15 @@ $(() => {
         }
 
         // Display the alert
+        $alert.hide()
         $("#alerts").prepend($alert)
+        $alert.slideDown()
+
+        if (type == "info") {
+            setTimeout(() => {
+                $alert.slideUp(() => $alert.remove())
+            }, 6666)
+        }
 
         // Log to the terminal
         switch (type) {
@@ -44,6 +52,41 @@ $(() => {
         $("#gameStarted").html(`${game.started}`)
     }
 
+    function updateGameStatus() {
+        var data = {
+            ai_id: aiId,
+            ai_key: aiKey
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "/game/" + game.id,
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json",
+            timeout: 1000,
+            success: (data) => {
+                pushAlert("Game information updated")
+
+                // Save game information
+                game = data
+
+                updateGameInfo(data)
+            },
+            error: (error) => {
+                if (error.responseText) {
+                    pushAlert(JSON.parse(error.responseText), "danger")
+                } else {
+                    pushAlert("Could not complete your request.", "danger")
+                }
+            }
+        })
+    }
+
+    function startGameUpdateInterval() {
+        setInterval(updateGameStatus, 2500)
+    }
+
     // Hide some elements at the start
     $("#ai-credentials").hide()
     $("#join-game").hide()
@@ -63,6 +106,7 @@ $(() => {
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
+            timeout: 1000,
             success: (data) => {
                 pushAlert("Registerd successfully!", "success")
                 $("#aiName").val("")
@@ -101,6 +145,7 @@ $(() => {
         $.ajax({
             type: "GET",
             url: "/ai/" + aiId,
+            timeout: 1000,
             success: (data) => {
                 pushAlert("AI name loaded successfully", "success")
 
@@ -139,17 +184,20 @@ $(() => {
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
+            timeout: 1000,
             success: (data) => {
                 pushAlert("Game created", "success")
 
                 // Save game information
-                gameId = data.id
+                game = data
 
                 updateGameInfo(data)
 
                 // Switch visibility
                 $("#join-game").hide()
                 $("#game-status").show()
+
+                startGameUpdateInterval()
             },
             error: (error) => {
                 if (error.responseText) {
