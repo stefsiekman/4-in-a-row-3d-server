@@ -19,6 +19,7 @@ module.exports = (req, res, next) => {
     pg.connect(process.env.DATABASE_URL, (err, client, done) => {
         if (err) {
             error.respondJson(res, 1)
+            done()
         } else {
             // Prepare the query
             var sql = "SELECT key FROM ais WHERE id = $1;"

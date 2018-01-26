@@ -17,6 +17,7 @@ module.exports = (req, res) => {
     pg.connect(process.env.DATABASE_URL, (err, client, done) => {
         if (err) {
             error.respondJson(res, 1)
+            done()
         } else {
             // Generate a key
             var key = sha(uuid())

@@ -10,8 +10,8 @@ function joinExistingGame(res, aiId, game, client, callback) {
     client.query(sql, values, (err, result) => {
         // Check for errors
         if (err) {
-            throw err
             error.respondJson(res, 1)
+            done()
             return
         }
 
@@ -29,8 +29,8 @@ function joinNewGame(res, aiId, client, callback) {
     client.query(sql, values, (err, result) => {
         // Check for errors
         if (err) {
-            throw err
             error.respondJson(res, 1)
+            done()
             return
         }
 
@@ -47,6 +47,7 @@ module.exports = (res, aiId, callback) => {
         if (err) {
             throw err
             error.respondJson(res, 1)
+            done()
             return
         }
 
@@ -57,8 +58,8 @@ module.exports = (res, aiId, callback) => {
         client.query(sql, values, (err, result) => {
             // Check for errors
             if (err) {
-                throw err
                 error.respondJson(res, 1)
+                done()
                 return
             }
 
