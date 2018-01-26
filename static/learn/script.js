@@ -83,6 +83,60 @@ $(() => {
                 }
             }
         })
+
+        fetchMoveTable()
+    }
+
+    function updateMoveTable(moves) {
+        // Clear first
+        var $tableBody = $("#moves tbody")
+        $tableBody.html("")
+
+        // Add information
+        for (let move of moves) {
+            var $row = $("<tr>")
+            $row.append($("<td>").html(move.id))
+            $row.append($("<td>").html(move.ai))
+            $row.append($("<td>").html(move.position))
+            $row.append($("<td>").html(move.started))
+            $row.append($("<td>").html(move.completed))
+            $tableBody.append($row)
+        }
+    }
+
+    function updateLastestMove(move) {
+        console.log("latest move", move)
+        $("#latest-move .ai").html(move.ai == aiId ? "you" : "you're opponent")
+        $("#latest-move .position").html(move.position)
+        $("#latest-move .completed").html(move.completed)
+    }
+
+    function fetchMoveTable() {
+        var data = {
+            ai_id: aiId,
+            ai_key: aiKey
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "/game/" + game.id + "/moves",
+            data: JSON.stringify(data),
+            dataType: "json",
+            contentType: "application/json",
+            timeout: 1000,
+            success: (data) => {
+                pushAlert("Move list updated")
+                updateMoveTable(data)
+                updateLastestMove(data.length > 0 ? data[data.length - 1] : {})
+            },
+            error: (error) => {
+                if (error.responseText) {
+                    pushAlert(JSON.parse(error.responseText), "danger")
+                } else {
+                    pushAlert("Could not complete your request.", "danger")
+                }
+            }
+        })
     }
 
     function startGameUpdateInterval() {
@@ -149,6 +203,7 @@ $(() => {
     $("#join-game").hide()
     $("#game-status").hide()
     $("#board").hide()
+    $("#moves").hide()
 
     // AI registration
     $("#formRegister").submit((event) => {
@@ -255,6 +310,7 @@ $(() => {
                 $("#join-game").hide()
                 $("#game-status").show()
                 $("#board").show()
+                $("#moves").show()
 
                 startGameUpdateInterval()
             },
@@ -280,6 +336,7 @@ $(() => {
         $("#join-game").hide()
         $("#game-status").show()
         $("#board").show()
+        $("#moves").show()
 
         startGameUpdateInterval()
     })
