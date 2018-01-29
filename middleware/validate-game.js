@@ -1,6 +1,6 @@
+const pool = require("../util/pg-pool")
 const error = require("../util/error")
 const game = require("../datatypes/game")
-const pg = require("pg")
 
 module.exports = (req, res, next) => {
 
@@ -13,38 +13,25 @@ module.exports = (req, res, next) => {
         return
     }
 
-    // Setup the database connection
-    pg.connect(process.env.DATABASE_URL, (err, client, done) => {
+    // Prepare and execute query
+    var sql = "SELECT * FROM games WHERE id=$1;"
+    var values = [ gameId ]
+    pool.query(sql, values, (err, result) => {
         // Check for errors
         if (err) {
             error.respondJson(res, 1)
-            done()
             return
         }
 
-        // Prepare and execute query
-        var sql = "SELECT * FROM games WHERE id=$1;"
-        var values = [ gameId ]
-        client.query(sql, values, (err, result) => {
-            // Check for errors
-            if (err) {
-                error.respondJson(res, 1)
-                done()
-                return
-            }
+        // Go to next, or give 404
+        if (result.rows[0]) {
+            // Update the parameters to add game instance
+            req.params.game = game.gamesFromRows(result.rows)[0]
 
-            // Go to next, or give 404
-            if (result.rows[0]) {
-                // Update the parameters to add game instance
-                req.params.game = game.gamesFromRows(result.rows)[0]
-
-                done()
-                next()
-            } else {
-                res.status(404).end()
-                done()
-            }
-        })
+            next()
+        } else {
+            res.status(404).end()
+        }
     })
 
 }

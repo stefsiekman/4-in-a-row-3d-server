@@ -1,3 +1,4 @@
+const pool = require("../util/pg-pool")
 const error = require("../util/error")
 
 // Class for the Move datatype
@@ -36,11 +37,11 @@ module.exports = {
     movesFromRows: movesFromRows,
 
     // Method to list all the moves that belong to a game
-    listByGame: (res, client, game, callback) => {
+    listByGame: (res, game, callback) => {
         // Prepare and execute query
         var sql = "SELECT * FROM moves WHERE game = $1;"
         var values = [ game.id ]
-        client.query(sql, values, (err, result) => {
+        pool.query(sql, values, (err, result) => {
             if (err) {
                 error.respondJson(res, 1)
             } else {

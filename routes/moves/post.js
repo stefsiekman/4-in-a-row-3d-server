@@ -1,15 +1,15 @@
-const pg = require("pg")
+const pool = require("../../util/pg-pool")
 const error = require("../../util/error")
 const movesFromRows = require("../../datatypes/move").movesFromRows
 const listMovesByGame = require("../../datatypes/move").listByGame
 const mechanics = require("../../util/game-mechanics")
 
-function updateStartedMove(res, client, game, move, moves, callback) {
+function updateStartedMove(res, game, move, moves, callback) {
     // Prepare and execute query
     var sql = "UPDATE moves SET position=$1, completed=CURRENT_TIMESTAMP "
             + "WHERE id=$2 RETURNING *;"
     var values = [ move.position, move.id ]
-    client.query(sql, values, (err, result) => {
+    pool.query(sql, values, (err, result) => {
         // Check for errors
         if (err || !result.rows[0]) {
             error.respondJson(res, 1)
@@ -20,11 +20,11 @@ function updateStartedMove(res, client, game, move, moves, callback) {
         moves[moves.length - 1] = movesFromRows(result.rows)[0]
 
         // Do checks after move
-        afterMoveChecks(res, client, game, moves, callback)
+        afterMoveChecks(res, game, moves, callback)
     })
 }
 
-function insertUnstartedMove(res, client, game, move, prevMove, moves,
+function insertUnstartedMove(res, game, move, prevMove, moves,
         callback) {
     // The SQL is the same for every new move
     var sql = "INSERT INTO moves (game, ai, position, started, completed) "
@@ -38,7 +38,7 @@ function insertUnstartedMove(res, client, game, move, prevMove, moves,
         // In case of move number 2 or later
         values = [ game.id, move.ai, move.position, prevMove.completed ]
     }
-    client.query(sql, values, (err, result) => {
+    pool.query(sql, values, (err, result) => {
         // Check for errors
         if (err || !result.rows[0]) {
             error.respondJson(res, 1)
@@ -49,18 +49,18 @@ function insertUnstartedMove(res, client, game, move, prevMove, moves,
         moves.push(movesFromRows(result.rows)[0])
 
         // Do checks after move
-        afterMoveChecks(res, client, game, moves, callback)
+        afterMoveChecks(res, game, moves, callback)
     })
 }
 
-function afterMoveChecks(res, client, game, moves, callback) {
+function afterMoveChecks(res, game, moves, callback) {
     game.createBoard(moves)
 
     // Check if the game is won
     var winner = mechanics.gameIsWon(moves)
     if (winner) {
         // Finish the game with the winner
-        game.finishWon(res, client, winner, () => {
+        game.finishWon(res, winner, () => {
             callback(game, moves)
         })
 
@@ -70,7 +70,7 @@ function afterMoveChecks(res, client, game, moves, callback) {
     // Check if the game is over
     if (mechanics.gameIsOver(moves)) {
         // Finish the game without winner, or give up-er
-        game.finishTied(res, client, () => {
+        game.finishTied(res, () => {
             callback(game, moves)
         })
 
@@ -109,73 +109,64 @@ module.exports = (req, res) => {
     }
 
     // Fetch the move information
-    pg.connect(process.env.DATABASE_URL, (err, client, done) => {
-        // Check for errors
-        if (err) {
-            error.respondJson(res, 1)
+    // Fetch the moves from this game
+    listMovesByGame(res, game, (moves) => {
+        // Check whether move is possible
+        if (!mechanics.possibleMove(moves, req.body.move.position)) {
+            error.respondJson(res, 14)
             done()
             return
         }
 
-        // Fetch the moves from this game
-        listMovesByGame(res, client, game, (moves) => {
-            // Check whether move is possible
-            if (!mechanics.possibleMove(moves, req.body.move.position)) {
-                error.respondJson(res, 14)
+        // If there aren't any moves yet
+        if (moves.length < 1) {
+            // Check that this is AI A
+            if (aiId != game.ai_a) {
+                error.respondJson(res, 11)
                 done()
                 return
             }
 
-            // If there aren't any moves yet
-            if (moves.length < 1) {
-                // Check that this is AI A
-                if (aiId != game.ai_a) {
-                    error.respondJson(res, 11)
-                    done()
-                    return
-                }
+            // Otherwise, this must be the unstarted move of AI A
 
-                // Otherwise, this must be the unstarted move of AI A
+            insertUnstartedMove(res, game, req.body.move,
+                    undefined, [], finalCallback)
+            done()
+        } else {
+            // If there are moves already
+            var lastMove = moves[moves.length - 1]
 
-                insertUnstartedMove(res, client, game, req.body.move,
-                        undefined, [], finalCallback)
+            // If we're waiting for the other AI's (started) move
+            if (!lastMove.completed && lastMove.ai != aiId) {
+                error.respondJson(res, 9)
                 done()
-            } else {
-                // If there are moves already
-                var lastMove = moves[moves.length - 1]
-
-                // If we're waiting for the other AI's (started) move
-                if (!lastMove.completed && lastMove.ai != aiId) {
-                    error.respondJson(res, 9)
-                    done()
-                    return
-                }
-
-                // If the other AI hasn't started it's move yet
-                if (lastMove.completed && lastMove.ai == aiId) {
-                    error.respondJson(res, 10)
-                    done()
-                    return
-                }
-
-                // If provided AI turn, and turn was already started
-                if (!lastMove.completed && lastMove.ai == aiId) {
-                    // Update the position of the last move, to update in database
-                    lastMove.position = +req.body.position
-
-                    updateStartedMove(res, client, game, lastMove, moves,
-                        finalCallback)
-
-                    done()
-                    return
-                }
-
-                // Must be provided AI turn, but the move wasn't started explicitly
-                insertUnstartedMove(res, client, game, req.body.move,
-                        lastMove, moves, finalCallback)
-                done()
+                return
             }
-        })
+
+            // If the other AI hasn't started it's move yet
+            if (lastMove.completed && lastMove.ai == aiId) {
+                error.respondJson(res, 10)
+                done()
+                return
+            }
+
+            // If provided AI turn, and turn was already started
+            if (!lastMove.completed && lastMove.ai == aiId) {
+                // Update the position of the last move, to update in database
+                lastMove.position = +req.body.position
+
+                updateStartedMove(res, game, lastMove, moves,
+                    finalCallback)
+
+                done()
+                return
+            }
+
+            // Must be provided AI turn, but the move wasn't started explicitly
+            insertUnstartedMove(res, game, req.body.move,
+                    lastMove, moves, finalCallback)
+            done()
+        }
     })
 
 }

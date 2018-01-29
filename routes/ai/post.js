@@ -1,4 +1,4 @@
-const pg = require("pg")
+const pool = require("../../util/pg-pool")
 const error = require("../../util/error")
 const validator = require("../../util/validator")
 const ai = require("../../datatypes/ai")
@@ -14,30 +14,22 @@ module.exports = (req, res) => {
         return
     }
 
-    pg.connect(process.env.DATABASE_URL, (err, client, done) => {
+    // Generate a key
+    var key = sha(uuid())
+    var hashedKey = sha(key)
+
+    // Prepare the statement
+    var sql = "INSERT INTO ais (name, key) VALUES ($1, $2) RETURNING *;"
+    var values = [name, hashedKey]
+
+    pool.query(sql, values, (err, result) => {
         if (err) {
             error.respondJson(res, 1)
-            done()
         } else {
-            // Generate a key
-            var key = sha(uuid())
-            var hashedKey = sha(key)
-
-            // Prepare the statement
-            var sql = "INSERT INTO ais (name, key) VALUES ($1, $2) RETURNING *;"
-            var values = [name, hashedKey]
-
-            client.query(sql, values, (err, result) => {
-                done();
-                if (err) {
-                    error.respondJson(res, 1)
-                } else {
-                    res.json({
-                        id: result.rows[0].id,
-                        name: result.rows[0].name,
-                        key: key
-                    })
-                }
+            res.json({
+                id: result.rows[0].id,
+                name: result.rows[0].name,
+                key: key
             })
         }
     })

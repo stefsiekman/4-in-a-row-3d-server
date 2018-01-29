@@ -1,21 +1,13 @@
-const pg = require("pg")
+const pool = require("../../util/pg-pool")
 const ai = require("../../datatypes/ai")
 
 module.exports = (req, res) => {
 
-    pg.connect(process.env.DATABASE_URL, (err, client, done) => {
+    pool.query("SELECT * FROM ais;", (err, result) => {
         if (err) {
             error.respondJson(res, 1)
-            done()
         } else {
-            client.query("SELECT * FROM ais;", (err, result) => {
-                done();
-                if (err) {
-                    error.respondJson(res, 1)
-                } else {
-                    res.json(ai.aisFromRows(result.rows))
-                }
-            })
+            res.json(ai.aisFromRows(result.rows))
         }
     })
 

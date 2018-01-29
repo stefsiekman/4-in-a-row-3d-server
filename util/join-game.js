@@ -1,13 +1,13 @@
-const pg = require("pg")
+const pool = require("./pg-pool")
 const error = require("./error")
 
-function joinExistingGame(res, aiId, game, client, callback) {
+function joinExistingGame(res, aiId, game, callback) {
     // Prepare the query
     var sql = "UPDATE games SET status=2, ai_b=$1 WHERE id=$2 RETURNING *;";
     var values = [ aiId, game.id ]
 
     // Execute!!
-    client.query(sql, values, (err, result) => {
+    pool.query(sql, values, (err, result) => {
         // Check for errors
         if (err) {
             error.respondJson(res, 1)
@@ -20,13 +20,13 @@ function joinExistingGame(res, aiId, game, client, callback) {
     })
 }
 
-function joinNewGame(res, aiId, client, callback) {
+function joinNewGame(res, aiId, callback) {
     // Prepare the query
     var sql = "INSERT INTO games (ai_a) VALUES ($1) RETURNING *;";
     var values = [ aiId ]
 
     // Execute!!
-    client.query(sql, values, (err, result) => {
+    pool.query(sql, values, (err, result) => {
         // Check for errors
         if (err) {
             error.respondJson(res, 1)
@@ -42,7 +42,7 @@ function joinNewGame(res, aiId, client, callback) {
 // Method to get next possible game to join
 module.exports = (res, aiId, callback) => {
 
-    pg.connect(process.env.DATABASE_URL, (err, client, done) => {
+    pg.connect(process.env.DATABASE_URL, (err, done) => {
         // Check whether to send an error message
         if (err) {
             throw err
@@ -55,7 +55,7 @@ module.exports = (res, aiId, callback) => {
         var sql = "SELECT * FROM games WHERE status=1 AND ai_b IS NULL "
                 + "AND ai_a != $1;"
         var values = [ aiId ]
-        client.query(sql, values, (err, result) => {
+        pool.query(sql, values, (err, result) => {
             // Check for errors
             if (err) {
                 error.respondJson(res, 1)
@@ -71,10 +71,10 @@ module.exports = (res, aiId, callback) => {
 
             // If something is returned, that game can be joined
             if (result.rows[0]) {
-                joinExistingGame(res, aiId, result.rows[0], client,
+                joinExistingGame(res, aiId, result.rows[0],
                     gameJoinedCallback)
             } else {
-                joinNewGame(res, aiId, client, gameJoinedCallback)
+                joinNewGame(res, aiId, gameJoinedCallback)
             }
         })
     })

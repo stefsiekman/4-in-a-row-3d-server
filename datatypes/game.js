@@ -1,3 +1,4 @@
+const pool = require('../util/pg-pool')
 const error = require("../util/error")
 const listMovesByGame = require("./move").listByGame
 
@@ -41,18 +42,18 @@ class Game {
         return this.board
     }
 
-    loadBoard(res, client, callback) {
-        listMovesByGame(res, client, this, (moves) => {
+    loadBoard(res, callback) {
+        listMovesByGame(res, this, (moves) => {
             this.createBoard(moves)
             callback(this)
         })
     }
 
-    finishTied(res, client, callback) {
+    finishTied(res, callback) {
         // Prepare and execute query
         var sql = "UPDATE games SET status=3 WHERE id=$1 RETURNING *;"
         var values = [ this.id ]
-        client.query(sql, values, (err, result) => {
+        pool.query(sql, values, (err, result) => {
             // Check for errors
             if (err || !result.rows[0]) {
                 error.respondJson(res, 1)
@@ -65,12 +66,12 @@ class Game {
         })
     }
 
-    finishWon(res, client, winner, callback) {
+    finishWon(res, winner, callback) {
         // Prepare and execute query
         var sql = "UPDATE games SET status=3, winner=$1 WHERE id=$2 "
                 + "RETURNING *;"
         var values = [ +winner, this.id ]
-        client.query(sql, values, (err, result) => {
+        pool.query(sql, values, (err, result) => {
             // Check for errors
             if (err || !result.rows[0]) {
                 error.respondJson(res, 1)
