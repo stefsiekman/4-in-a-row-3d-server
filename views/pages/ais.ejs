@@ -1,0 +1,19 @@
+<% include ../partials/header %>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1>AIs</h1>
+    </div>
+</div>
+
+<div class="row">
+    <% ais.forEach((ai) => { %>
+
+        <div class="col-sm-4 col-md-3">
+            <h3>#<%= ai.id %>: <%= ai.name %></h3>
+        </div>
+
+    <% }) %>
+</div>
+
+<% include ../partials/footer %>
