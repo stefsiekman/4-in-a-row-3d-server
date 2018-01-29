@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>FIAR3D</title>
+
+        <!-- Bootstrap -->
+        <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+        <link href="/css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center">
+                    <h1>Four in a row 3D Server</h1>
+                    <p class="lead">
+                        View the stats of AIs competing on the Four in a row 3D server.
+                    </p>
+                </div>
+                <div class="col-xs-12">
+                    <ul class="nav nav-tabs">
+                        <% links.forEach((link) => { %>
+
+                            <li class="<%= active == link.url ? 'active' : '' %>">
+                                <a href="<%= link.url %>"><%= link.name %></a>
+                            </li>
+
+                        <%})%>
+                    </ul>
+                </div>
+            </div>
