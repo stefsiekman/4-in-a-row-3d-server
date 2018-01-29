@@ -77,7 +77,7 @@ $(() => {
 
         $.ajax({
             type: "GET",
-            url: "/game/" + game.id,
+            url: "/api/game/" + game.id,
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
@@ -131,7 +131,7 @@ $(() => {
 
         $.ajax({
             type: "GET",
-            url: "/game/" + game.id + "/moves",
+            url: "/api/game/" + game.id + "/moves",
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
@@ -226,7 +226,7 @@ $(() => {
 
         $.ajax({
             type: "POST",
-            url: "/ai",
+            url: "/api/ai",
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
@@ -268,7 +268,7 @@ $(() => {
 
         $.ajax({
             type: "GET",
-            url: "/ai/" + aiId,
+            url: "/api/ai/" + aiId,
             timeout: 1000,
             success: (data) => {
                 pushAlert("AI name loaded successfully", "success")
@@ -304,7 +304,7 @@ $(() => {
 
         $.ajax({
             type: "POST",
-            url: "/game",
+            url: "/api/game",
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
@@ -366,7 +366,7 @@ $(() => {
 
         $.ajax({
             type: "POST",
-            url: "/game/" + game.id + "/moves",
+            url: "/api/game/" + game.id + "/moves",
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",

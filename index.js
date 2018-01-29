@@ -21,7 +21,7 @@ app.use("/", require("./views/index.js"))
 
 // API routes
 app.use(express.json())
-app.use("/ai", require("./routes/ai/router"))
-app.use("/game", require("./routes/game/router"))
+app.use("/api/ai", require("./routes/ai/router"))
+app.use("/api/game", require("./routes/game/router"))
 
 app.listen(PORT, () => console.log(`Server running on ${ PORT }`))
