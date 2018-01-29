@@ -42,7 +42,7 @@ function joinNewGame(res, aiId, callback) {
 // Method to get next possible game to join
 module.exports = (res, aiId, callback) => {
 
-    pg.connect(process.env.DATABASE_URL, (err, done) => {
+    pool.connect(process.env.DATABASE_URL, (err, done) => {
         // Check whether to send an error message
         if (err) {
             throw err
