@@ -23,16 +23,19 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>ID<th>
+                    <th>ID</th>
                     <th>Status</th>
                     <th>Opponent</th>
                     <th>Winner/gaveup</th>
                 </tr>
             </thead>
-            <% games.forEach((game) => { %>
+            <% games.forEach((game) => {
+                var opponent = game.ai_a == ai.id ? game.ai_b : game.ai_a %>
                 <tr>
                     <td><%= game.id %></td>
-                    <td><%= game.id %></td>
+                    <td><%= ["waiting", "in progress", "over"][game.status-1] %></td>
+                    <td><%= opponent %></td>
+                    <td><%= game.winner ? game.winner : game.gaveup %></td>
                 </tr>
             <% }) %>
         </table>
