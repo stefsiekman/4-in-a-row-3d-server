@@ -26,16 +26,36 @@
                     <th>ID</th>
                     <th>Status</th>
                     <th>Opponent</th>
-                    <th>Winner/gaveup</th>
+                    <th>Winner</th>
+                    <th>Gave up</th>
                 </tr>
             </thead>
+            <%
+            function aiLink(aiId) {
+                if (aiId == ai.id)
+                    return aiId
+                else if (aiId)
+                    return `<a href="/ais/${aiId}">${aiId}</a>`
+                else
+                    return "-"
+            }
+            %>
             <% games.forEach((game) => {
                 var opponent = game.ai_a == ai.id ? game.ai_b : game.ai_a %>
-                <tr>
+                <% if (game.winner == ai.id) { %>
+                    <tr class="success">
+                <% } else if (game.winner == opponent && game.winner) { %>
+                    <tr class="danger">
+                <% } else if (game.status == 2) { %>
+                    <tr class="info">
+                <% } else { %>
+                    <tr>
+                <% } %>
                     <td><%= game.id %></td>
                     <td><%= ["waiting", "in progress", "over"][game.status-1] %></td>
-                    <td><%= opponent %></td>
-                    <td><%= game.winner ? game.winner : game.gaveup %></td>
+                    <td><%- aiLink(opponent) %></td>
+                    <td><%- aiLink(game.winner) %></td>
+                    <td><%- aiLink(game.gaveup) %></td>
                 </tr>
             <% }) %>
         </table>
