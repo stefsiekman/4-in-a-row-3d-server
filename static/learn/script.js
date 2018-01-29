@@ -78,10 +78,9 @@ $(() => {
         $.ajax({
             type: "GET",
             url: "/api/game/" + game.id,
-            data: JSON.stringify(data),
             dataType: "json",
+            data: JSON.stringify(data),
             contentType: "application/json",
-            timeout: 1000,
             success: (data) => {
                 // Save game information
                 game = data
@@ -135,7 +134,6 @@ $(() => {
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
-            timeout: 1000,
             success: (data) => {
                 updateMoveTable(data)
                 updateLastestMove(data.length > 0 ? data[data.length - 1] : {})
@@ -230,7 +228,6 @@ $(() => {
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
-            timeout: 1000,
             success: (data) => {
                 pushAlert("Registerd successfully!", "success")
                 $("#aiName").val("")
@@ -269,7 +266,6 @@ $(() => {
         $.ajax({
             type: "GET",
             url: "/api/ai/" + aiId,
-            timeout: 1000,
             success: (data) => {
                 pushAlert("AI name loaded successfully", "success")
 
@@ -308,7 +304,6 @@ $(() => {
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
-            timeout: 1000,
             success: (data) => {
                 pushAlert("Game created", "success")
 
@@ -370,7 +365,6 @@ $(() => {
             data: JSON.stringify(data),
             dataType: "json",
             contentType: "application/json",
-            timeout: 1000,
             success: (data) => {
                 pushAlert("Move made", "success")
 

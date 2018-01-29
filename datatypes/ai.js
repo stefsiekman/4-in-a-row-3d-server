@@ -1,4 +1,5 @@
 const pool = require("../util/pg-pool")
+const Game = require("./game").Game
 const error = require("../util/error")
 
 // Class for the AI datatype
@@ -7,6 +8,22 @@ class AI {
     constructor(id, name) {
         this.id = id
         this.name = name
+    }
+
+    listGames(res, callback) {
+        var sql = "SELECT * FROM games WHERE ai_a=$1 OR ai_b=$1 ORDER BY id DESC;"
+        pool.query(sql, [this.id], (err, result) => {
+            // Check for errors
+            if (err) {
+                error.respondJson(res, 1, err)
+                return
+            }
+
+            // Add all the AIs
+            var games = []
+            result.rows.forEach((row) => games.push(Game.fromRow(row)))
+            callback(games)
+        })
     }
 
     static list(res, callback) {

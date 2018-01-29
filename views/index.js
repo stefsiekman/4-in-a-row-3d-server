@@ -51,10 +51,14 @@ router.get("/ais/:aiId", (req, res) => {
             res.render("pages/404")
         } else {
             // Otherwise, display the found ai
-            res.render("pages/ai", {
-                links: navLinks,
-                active: "/ais",
-                ai: ai
+            // But first load the games by this AI
+            ai.listGames(res, (games) => {
+                res.render("pages/ai", {
+                    links: navLinks,
+                    active: "/ais",
+                    ai: ai,
+                    games: games
+                })
             })
         }
     })
@@ -69,9 +73,4 @@ router.get("/games", (req, res) => {
             games: games
         })
     })
-})
-
-// 404
-router.get("*", (req, res) => {
-    res.render("pages/404")
 })
