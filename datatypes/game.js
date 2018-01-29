@@ -45,6 +45,7 @@ class Game {
     loadBoard(res, callback) {
         listMovesByGame(res, this, (moves) => {
             this.createBoard(moves)
+            this.moves = moves
             callback(this)
         })
     }
@@ -99,6 +100,23 @@ class Game {
             result.rows.forEach((row) => games.push(this.fromRow(row)))
 
             callback(games)
+        })
+    }
+
+    static getById(res, id, callback) {
+        pool.query("SELECT * FROM games WHERE id=$1;", [id], (err, result) => {
+            // Check for errors
+            if (err) {
+                error.respondJson(res, 1, err)
+                return
+            }
+
+            // Check if there is no game found
+            if (!result.rows[0]) {
+                callback(undefined)
+            } else {
+                callback(this.fromRow(result.rows[0]))
+            }
         })
     }
 

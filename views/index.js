@@ -74,3 +74,23 @@ router.get("/games", (req, res) => {
         })
     })
 })
+
+// Single game
+router.get("/games/:gameId", (req, res) => {
+    Game.getById(res, req.params.gameId, (game) => {
+        if (!game) {
+            // If there was no game found
+            res.render("pages/404")
+        } else {
+            // Otherwise display the game
+            // But first load the board
+            game.loadBoard(res, (game) => {
+                res.render("pages/game", {
+                    links: navLinks,
+                    active: "/games",
+                    game: game
+                })
+            })
+        }
+    })
+})

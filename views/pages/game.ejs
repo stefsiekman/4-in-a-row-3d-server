@@ -1,0 +1,82 @@
+<% include ../partials/header %>
+
+<%
+function aiLink(aiId) {
+    if (aiId)
+        return `<a href="/ais/${aiId}">${aiId}</a>`
+    else
+        return "-"
+}
+function gameLink(id) {
+    if (id == game.id)
+        return id
+    else if (id)
+        return `<a href="/games/${id}">${id}</a>`
+    else
+        return "-"
+}
+%>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1>Single Game Information</h1>
+        <p><a href="/games" class="btn btn-default">&laquo; Back to all</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Details</h2>
+        <table class="table">
+            <tr>
+                <th width=100>ID</th>
+                <td><%= game.id %></td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td><%= ["waiting", "in progress", "over"][game.status-1] %></td>
+            </tr>
+            <tr>
+                <th>AI A</th>
+                <td><%- aiLink(game.ai_a) %></td>
+            </tr>
+            <tr>
+                <th>AI B</th>
+                <td><%- aiLink(game.ai_b) %></td>
+            </tr>
+            <tr>
+                <th>Winner</th>
+                <td><%- aiLink(game.winner) %></td>
+            </tr>
+            <tr>
+                <th>Gave up</th>
+                <td><%- aiLink(game.gaveup) %></td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h2>Board</h2>
+    </div>
+    <div class="col-md-4">
+        <h2>Moves</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>AI</th>
+                    <th>Position</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% game.moves.forEach((move) => { %>
+                    <tr>
+                        <td><%= move.id %></td>
+                        <td><%= move.ai %></td>
+                        <td><%= move.position %></td>
+                        <td><%= (move.completed - move.started) / 1000 %> s</td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<% include ../partials/footer %>

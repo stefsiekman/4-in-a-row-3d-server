@@ -14,7 +14,7 @@
             <p><strong>Status:</strong> <%= game.status %></p>
             <p><strong>Winner:</strong> <%= game.winner %></p>
             <p><strong>Gave up:</strong> <%= game.gaveup %></p>
-            <p><strong>Created:</strong> <%= game.started %></p>
+            <p><a href="/games/<%= game.id %>" class="btn btn-default">See details</a></p>
         </div>
 
     <% }) %>

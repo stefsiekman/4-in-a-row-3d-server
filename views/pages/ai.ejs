@@ -1,5 +1,19 @@
 <% include ../partials/header %>
 
+<%
+function aiLink(aiId) {
+    if (aiId == ai.id)
+        return aiId
+    else if (aiId)
+        return `<a href="/ais/${aiId}">${aiId}</a>`
+    else
+        return "-"
+}
+function gameLink(id) {
+    return `<a href="/games/${id}">${id}</a>`
+}
+%>
+
 <div class="row">
     <div class="col-xs-12">
         <h1>Single AI Information</h1>
@@ -9,7 +23,7 @@
         <h2>Details</h2>
         <table class="table">
             <tr>
-                <th>ID</th>
+                <th width=100>ID</th>
                 <td><%= ai.id %></td>
             </tr>
             <tr>
@@ -30,16 +44,6 @@
                     <th>Gave up</th>
                 </tr>
             </thead>
-            <%
-            function aiLink(aiId) {
-                if (aiId == ai.id)
-                    return aiId
-                else if (aiId)
-                    return `<a href="/ais/${aiId}">${aiId}</a>`
-                else
-                    return "-"
-            }
-            %>
             <% games.forEach((game) => {
                 var opponent = game.ai_a == ai.id ? game.ai_b : game.ai_a %>
                 <% if (game.winner == ai.id) { %>
@@ -51,7 +55,7 @@
                 <% } else { %>
                     <tr>
                 <% } %>
-                    <td><%= game.id %></td>
+                    <td><%- gameLink(game.id) %></td>
                     <td><%= ["waiting", "in progress", "over"][game.status-1] %></td>
                     <td><%- aiLink(opponent) %></td>
                     <td><%- aiLink(game.winner) %></td>
