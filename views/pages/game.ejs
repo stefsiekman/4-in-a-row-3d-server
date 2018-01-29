@@ -53,6 +53,35 @@ function gameLink(id) {
     </div>
     <div class="col-md-4">
         <h2>Board</h2>
+        <div class="row">
+            <% for (var z = 0; z < 4; z++) { %>
+                <div class="col-md-6">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th colspan="4">Z = <%= z %></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (var y = 3; y >= 0; y--) { %>
+                                <tr>
+                                    <% for (var x = 0; x < 4; x++) { %>
+                                        <% var ai = game.board[x + y * 4][z] %>
+                                        <% if (ai == game.ai_a) { %>
+                                            <td class="success">&nbsp;</td>
+                                        <% } else if (ai == game.ai_b) { %>
+                                            <td class="danger">&nbsp;</td>
+                                        <% } else { %>
+                                            <td>&nbsp;</td>
+                                        <% } %>
+                                    <% } %>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } %>
+        </div>
     </div>
     <div class="col-md-4">
         <h2>Moves</h2>
