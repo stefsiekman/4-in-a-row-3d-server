@@ -43,6 +43,23 @@ router.get("/ais", (req, res) => {
     })
 })
 
+// Single AI
+router.get("/ais/:aiId", (req, res) => {
+    AI.getById(res, req.params.aiId, (ai) => {
+        if (!ai) {
+            // If the ai was not found
+            res.render("pages/404")
+        } else {
+            // Otherwise, display the found ai
+            res.render("pages/ai", {
+                links: navLinks,
+                active: "/ais",
+                ai: ai
+            })
+        }
+    })
+})
+
 // Games
 router.get("/games", (req, res) => {
     Game.list(res, (games) => {
@@ -52,4 +69,9 @@ router.get("/games", (req, res) => {
             games: games
         })
     })
+})
+
+// 404
+router.get("*", (req, res) => {
+    res.render("pages/404")
 })

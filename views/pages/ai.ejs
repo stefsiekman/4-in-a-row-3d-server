@@ -1,0 +1,23 @@
+<% include ../partials/header %>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h1>Single AI Information</h1>
+        <p><a href="/ais" class="btn btn-default">&laquo; Back to all</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>Details</h2>
+        <table class="table">
+            <tr>
+                <th width=100>ID</th>
+                <td><%= ai.id %></td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td><%= ai.name %></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<% include ../partials/footer %>

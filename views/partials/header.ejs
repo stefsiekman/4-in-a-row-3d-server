@@ -21,14 +21,16 @@
                     </p>
                 </div>
                 <div class="col-xs-12">
-                    <ul class="nav nav-tabs">
-                        <% links.forEach((link) => { %>
+                    <% if (locals.links) { %>
+                        <ul class="nav nav-tabs">
+                                <% links.forEach((link) => { %>
 
-                            <li class="<%= active == link.url ? 'active' : '' %>">
-                                <a href="<%= link.url %>"><%= link.name %></a>
-                            </li>
+                                    <li class="<%= active == link.url ? 'active' : '' %>">
+                                        <a href="<%= link.url %>"><%= link.name %></a>
+                                    </li>
 
-                        <%})%>
-                    </ul>
+                                <%})%>
+                        </ul>
+                    <%}%>
                 </div>
             </div>

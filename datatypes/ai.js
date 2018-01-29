@@ -28,6 +28,24 @@ class AI {
         return new AI(row.id, row.name)
     }
 
+    static getById(res, id, callback) {
+        pool.query("SELECT * FROM ais WHERE id = $1;", [id], (err, result) => {
+            // Check for errors
+            if (err) {
+                error.respondJson(res, 1, err)
+                return
+            }
+
+            // Check if there is even something found
+            if (!result.rows[0]) {
+                callback(undefined)
+            } else {
+                // Otherwise, return an AI instance
+                callback(this.fromRow(result.rows[0]))
+            }
+        })
+    }
+
 }
 
 module.exports = {
