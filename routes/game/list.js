@@ -4,7 +4,7 @@ const Game = require("../../datatypes/game").Game
 
 module.exports = (req, res) => {
 
-    Game.list((games) => {
+    Game.list(res, (games) => {
         res.json(games)
     })
 

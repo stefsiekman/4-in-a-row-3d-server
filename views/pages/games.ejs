@@ -6,4 +6,18 @@
     </div>
 </div>
 
+<div class="row">
+    <% games.forEach((game) => { %>
+
+        <div class="col-sm-4 col-md-3">
+            <h3>#<%= game.ai_a %> vs #<%= game.ai_b %></h3>
+            <p><strong>Status:</strong> <%= game.status %></p>
+            <p><strong>Winner:</strong> <%= game.winner %></p>
+            <p><strong>Gave up:</strong> <%= game.gaveup %></p>
+            <p><strong>Created:</strong> <%= game.started %></p>
+        </div>
+
+    <% }) %>
+</div>
+
 <% include ../partials/footer %>

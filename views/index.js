@@ -2,6 +2,7 @@ const fs = require("fs")
 const express = require("express")
 const router = express.Router()
 module.exports = router
+const Game = require("../datatypes/game").Game
 
 // CSS files
 router.use("/css/", express.static("./views/css"))
@@ -31,8 +32,11 @@ router.get("/documentation", (req, res) => {
 
 // Games
 router.get("/games", (req, res) => {
-    res.render("pages/games", {
-        links: navLinks,
-        active: "/games"
+    Game.list(res, (games) => {
+        res.render("pages/games", {
+            links: navLinks,
+            active: "/games",
+            games: games
+        })
     })
 })

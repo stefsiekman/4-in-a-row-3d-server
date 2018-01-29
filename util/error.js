@@ -20,7 +20,7 @@ const errors = [
 module.exports = {
 
     // Make a HTTP response with the errro message
-    respondJson: (res, code) => {
+    respondJson: (res, code, err) => {
         // Log to the console
         console.error(`Error #${ code }: ${ errors[code - 1] }`)
 

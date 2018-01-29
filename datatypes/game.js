@@ -86,11 +86,11 @@ class Game {
     }
 
     // Function to list all the games in the database
-    static list(callback) {
-        pool.query("SELECT * FROM games;", (err, result) => {
+    static list(res, callback) {
+        pool.query("SELECT * FROM games ORDER BY id DESC;", (err, result) => {
             // Check for errors
             if (err) {
-                res.respondJson(res, 1)
+                error.respondJson(res, 1, err)
                 return
             }
 
