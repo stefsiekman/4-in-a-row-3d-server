@@ -20,6 +20,7 @@
     "homepage": "https://github.com/stefsiekman/4-in-a-row-3d-server#readme",
     "dependencies": {
         "bootstrap": "^3.3.7",
+        "ejs": "^2.5.7",
         "express": "4.16.2",
         "jquery": "^3.3.1",
         "pg": "^6.4.2",
