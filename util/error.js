@@ -24,6 +24,11 @@ module.exports = {
         // Log to the console
         console.error(`Error #${ code }: ${ errors[code - 1] }`)
 
+        // Log details if provided
+        if (err) {
+            console.error(err.error)
+        }
+
         // Create the response
         res.json(500, {
             error_code: code,
