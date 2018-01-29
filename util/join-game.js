@@ -50,13 +50,11 @@ module.exports = (res, aiId, callback) => {
         // Check for errors
         if (err) {
             error.respondJson(res, 1)
-            done()
             return
         }
 
         // Callback for when a game is joined
         var gameJoinedCallback = (game) => {
-            done()
             callback(game)
         }
 
