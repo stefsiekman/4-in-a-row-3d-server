@@ -26,7 +26,7 @@ module.exports = {
 
         // Log details if provided
         if (err) {
-            console.error(err.error)
+            console.error(err)
         }
 
         // Create the response
