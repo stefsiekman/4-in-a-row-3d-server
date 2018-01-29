@@ -85,6 +85,27 @@ class Game {
         })
     }
 
+    // Function to list all the games in the database
+    static list(callback) {
+        pool.query("SELECT * FROM games;", (err, result) => {
+            // Check for errors
+            if (err) {
+                res.respondJson(res, 1)
+                return
+            }
+
+            // Add all the rows
+            var games = []
+            result.rows.forEach((row) => games.push(this.fromRow(row)))
+
+            callback(games)
+        })
+    }
+
+    static fromRow(row) {
+        return new Game(row.id, row.status, row.ai_a, row.ai_b, row.started, row.winner, row.gaveup)
+    }
+
 }
 
 module.exports = {
