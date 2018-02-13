@@ -62,8 +62,8 @@ $(() => {
         $("#gameAIa").html(`${game.ai_a}`)
         $("#gameAIb").html(`${game.ai_b}`)
         $("#gameStatus").html(`${game.status}`)
-        $("#gameWinner").html(`${game.winner ? (game.winner == aiId ? "you" : "you're opponent") : "-"}`)
-        $("#gameGaveup").html(`${game.gaveup ? (game.gaveup == aiId ? "you" : "you're opponent") : "-"}`)
+        $("#gameWinner").html(`${game.winner ? (game.winner == aiId ? "you" : "your opponent") : "-"}`)
+        $("#gameGaveup").html(`${game.gaveup ? (game.gaveup == aiId ? "you" : "your opponent") : "-"}`)
         $("#gameStarted").html(`${game.started}`)
 
         updateBoardInfo(game.board)
@@ -108,7 +108,7 @@ $(() => {
         for (let move of moves) {
             var $row = $("<tr>")
             $row.append($("<td>").html(move.id))
-            $row.append($("<td>").html(move.ai == aiId ? "you" : "you're opponent"))
+            $row.append($("<td>").html(move.ai == aiId ? "you" : "your opponent"))
             $row.append($("<td>").html(move.position))
             $row.append($("<td>").html(move.started))
             $row.append($("<td>").html(move.completed))
@@ -117,7 +117,7 @@ $(() => {
     }
 
     function updateLastestMove(move) {
-        $("#latest-move .ai").html(move.ai == aiId ? "you" : "you're opponent")
+        $("#latest-move .ai").html(move.ai ? (move.ai == aiId ? "you" : "your opponent") : "-")
         $("#latest-move .position").html(move.position)
         $("#latest-move .completed").html(move.completed)
     }
