@@ -58,6 +58,28 @@ class Game {
         }
     }
 
+    createToMoveField() {
+        // Only set the field if the game is in progress
+        if (!this.status == 2) {
+            return
+        }
+
+        if (!this.moves) {
+            console.error("Could not generate the to move field, without the game's moves loaded")
+            return
+        }
+
+        // If no moves have been made, set ai A
+        if (this.moves.length < 1) {
+            this.to_move = this.ai_a
+        } else {
+            // Otherwise, the opposite of the last move
+            var lastMove = this.moves[this.moves.length - 1]
+            var lastAi = lastMove.ai
+            this.to_move = lastAi == this.ai_a ? this.ai_b : this.ai_a
+        }
+    }
+
     loadBoard(res, callback) {
         listMovesByGame(res, this, (moves) => {
             this.createBoard(moves)

@@ -6,6 +6,7 @@ module.exports = (req, res) => {
 
     req.params.game.loadBoard(res, (game) => {
         game.createPossibleMoves()
+        game.createToMoveField()
         res.json(game)
     })
 
