@@ -42,6 +42,22 @@ class Game {
         return this.board
     }
 
+    createPossibleMoves() {
+        if (!this.board) {
+            console.error("Could not generate possible moves, not game board generated")
+            return
+        }
+
+        this.possible_moves = []
+
+        // Add all the non-full pillars to the possible moves list
+        for (var pillar = 0; pillar < 16; pillar++) {
+            if (!this.board[pillar][3]) {
+                this.possible_moves.push(pillar)
+            }
+        }
+    }
+
     loadBoard(res, callback) {
         listMovesByGame(res, this, (moves) => {
             this.createBoard(moves)

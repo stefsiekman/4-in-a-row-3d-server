@@ -5,6 +5,7 @@ const game = require("../../datatypes/game")
 module.exports = (req, res) => {
 
     req.params.game.loadBoard(res, (game) => {
+        game.createPossibleMoves()
         res.json(game)
     })
 
