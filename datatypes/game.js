@@ -19,21 +19,27 @@ class Game {
         // Create an empty board
         this.board = []
 
-        // 16 pillar of 4 in height
-        for (var pos = 0; pos < 16; pos++) {
-            var pillar = []
-            for (var y = 0; y < 4; y++) {
-                pillar.push(undefined)
+        // Create 3D board array
+        for (var z = 0; z < 4; z ++) {
+            var zLayer = []
+            for (var x = 0; x < 4; x++) {
+                var xLine = []
+                for (var y = 0; y < 4; y++) {
+                    xLine.push(undefined)
+                }
+                zLayer.push(xLine)
             }
-            this.board.push(pillar)
+            this.board.push(zLayer)
         }
 
         // Plot the moves on the board
         for (let move of moves) {
+            var x = move.position % 4
+            var y = Math.floor(move.position / 4)
             // Place on next availible spot in pillar
-            for (var y = 0; y < 4; y++) {
-                if (!this.board[move.position][y]) {
-                    this.board[move.position][y] = move.ai
+            for (var z = 0; z < 4; z++) {
+                if (!this.board[z][x][y]) {
+                    this.board[z][x][y] = move.ai
                     break
                 }
             }
@@ -51,9 +57,11 @@ class Game {
         this.possible_moves = []
 
         // Add all the non-full pillars to the possible moves list
-        for (var pillar = 0; pillar < 16; pillar++) {
-            if (!this.board[pillar][3]) {
-                this.possible_moves.push(pillar)
+        for (var x = 0; x < 4; x++) {
+            for (var y = 0; y < 4; y++) {
+                if (!this.board[x][y][3]) {
+                    this.possible_moves.push(x + y * 4)
+                }
             }
         }
     }
