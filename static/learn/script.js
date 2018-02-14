@@ -194,7 +194,7 @@ $(() => {
         for (var x = 0; x < 4; x++) {
             for (var y = 0; y < 4; y++) {
                 for (var z = 0; z < 4; z++) {
-                    var status = board[x + y * 4][z]
+                    var status = board[z][x][y]
                     var $cell = $(`.board-cell-${x}${y}${z}`)
 
                     if (status == aiId) {
