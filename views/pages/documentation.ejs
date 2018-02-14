@@ -5,8 +5,189 @@
         <h1>Documentation</h1>
     </div>
     <div class="col-md-6">
-        So far, there isn't much information yet on how to use the game server. In the mean time, you can have a
-        look at the live example running at <a href="/learn/">/learn</a>.
+        <p>
+            So far, there isn't much information yet on how to use the game server. In the mean time, you can have a
+            look at the live example running at <a href="/learn/">/learn</a>.
+        </p>
+        <p>
+            On this page you can find some rudimentary documentation for the HTTP API. We're currently also developing libraries to compete on our server. If you feel like implementing an AI in you own programming language of choice, you can use this guide for the HTTP calls you'll have to make.
+        </p>
+        <div class="alert alert-danger">
+            <p><strong>Watch out:</strong> this documentation was written before the implementation of the HTTP API. This means that some information might be outdated. Be sure to check whether calls to the API still work. If you run into problems, try using an application such as <a href="https://www.getpostman.com" target="_blank">Postman</a> to make HTTP request and analyse the responses.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>AI</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>GET /ai/45</h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            The details of an AI with a given ID.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Response</h4>
+        <pre>{
+    "name": "Atheros"
+}</pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>POST /ai</h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Register a new AI to the server.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Request</h4>
+        <pre>{
+    "name": "Atheros"
+}</pre>
+        <h4>Response</h4>
+        <pre>{
+    "id": 45,
+    "name": "Atheros",
+    "secret_key": "acbdefg123456"
+}</pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Game</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>POST /game</h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Starts a new game. A new game will only be created if no games are in the “waiting” status, otherwise the game will be returned that is waiting.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Request</h4>
+        <pre>{
+    "ai_id": 45,
+    "secret_key": "acbdefg123456"
+}</pre>
+        <h4>Response</h4>
+        <pre>{
+	"id": 5836,
+	"ai_a": 45,
+	"ai_b": null
+}</pre>
+    </div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>GET /game/5836</h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            The status of a certain game. This can be, in chronological order, one of the following states:
+
+            <ul>
+                <li>Waiting: waiting for the second AI to join the game</li>
+                <li>AI A/B turn: it’s to the AI nr. A/B to make a move</li>
+                <li>Over: the game is finished because one of the following reasons:
+                    <ul>
+                    	<li>AI A or B won, in which case an addition “winner” field will be returned</li>
+                    	<li>There is a tie (i.e. all the balls are inserted, but there is no AI with 4 in a row)</li>
+                    	<li>Interrupted: one of the AIs gave up, or the game was timed out (the period for this should still be determined)</li>
+                    </ul>
+                </li>
+            </ul>
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Response</h4>
+        <pre>{
+    "id": 5836,
+    "status_code": 1,
+    "status_message": "Waiting",
+    "ai_a": 45,
+    "ai_b": null,
+    "started": "Wed Jan 24 2018 18:19:04 GMT+0100 (CET)"
+}</pre>
+        <p>or:</p>
+        <pre>{
+    "id": 5836,
+    "status_code": 2,
+    "status_message": "In progress",
+    "ai_a": 45,
+    "ai_b": 53,
+    "ai_turn": 45,
+    "moves_passed": 13,
+    "started": "Wed Jan 24 2018 18:19:04 GMT+0100 (CET)"
+}</pre>
+        <p>or:</p>
+        <pre>{
+    "id": 5836,
+    "status_code": 3,
+    "status_message": "Over",
+    "over_reason_code": 1,
+    "over_reason_message": "Won",
+    "ai_a": 45,
+    "ai_b": 53,
+    "ai_winner": 53,
+    "moves_passed": 34,
+    "started": "Wed Jan 24 2018 18:19:04 GMT+0100 (CET)",
+    "ended": "Wed Jan 24 2018 18:22:56 GMT+0100 (CET)"
+}</pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>POST /game/5836</h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Do a move on a certain game. Might give an error if the move is:
+            <ul>
+                <li>Invalid: the ball can not be inserted on the specified place, maybe because there are already 4 balls there, or the coordinates are invalid</li>
+                <li>Not to move: it wasn’t the AIs turn to place a ball</li>
+            </ul>
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Request</h4>
+        <pre>{
+    "ai_id": 45,
+    "secret_key": "acbdefg123456",
+    "position": 4
+}</pre>
+        <h4>Response</h4>
+        <pre>{
+    "id": 5836,
+    "status_code": 2,
+    "status_message": "In progress",
+    "ai_a": 45,
+    "ai_b": 53,
+    "ai_turn": 53,
+    "moves_passed": 1,
+    "started": "Wed Jan 24 2018 18:19:04 GMT+0100 (CET)"
+}</pre>
+        <p>or:</p>
+        <pre>{
+    "error_code": 1,
+    "error_message": "Invalid move"
+}</pre>
     </div>
 </div>
 
