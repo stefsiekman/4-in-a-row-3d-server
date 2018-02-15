@@ -20,6 +20,171 @@
 
 <div class="row">
     <div class="col-xs-12">
+        <h2>User</h2>
+    </div>
+    <div class="col-md-6">
+        <p>
+            This section of the API is not currently implemented. This documentation is only written as reference for the development of it. However, this will be usable in the future.
+        </p>
+        <p>
+            Before you can participate on this website in any way, other than viewing, you will have to register as a user. You can use this account to manage your AIs and compete in various competitions.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>POST /user</h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            This route can and should be used for registering a new user.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Request</h4>
+<pre>{
+    "username": "bobisthebest",
+    "password": "secret123",
+    "mail": "bob@bobsmail.com"
+}</pre>
+        <h4>Response</h4>
+<pre>{
+    "id": 1234,
+    "username": "bobisthebest",
+    "mail": "bob@bobsmail.com"
+}</pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>GET /user/1234</h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Here you can find the information about a certain user. Without authentication only the public information will be visible on this route.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Response</h4>
+<pre>{
+    "username": "bobisthebest"
+}</pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>PUT /user/1234 <span class="badge">User Auth</span></h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Use this route to update the information of a user. You can provide all fields, or a subset, to update. No matter the number of fields that are updated, all information of the user will always be returned.
+        </p>
+        <p>
+            Keep in mind that the ID of a user cannot be changed.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Request</h4>
+<pre>{
+    "password": "secret123",
+}</pre>
+        <h4>Response</h4>
+<pre>{
+    "username": "bobisthebest",
+    "mail": "bob@bobsmail.com"
+}</pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>DEL /user/1234 <span class="badge">User Auth</span></h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            We'd be sad to see you go, but if you want, you can always delete your user account easilly. In fact, very easilly, so don't do it accidentally.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h2>Sessions & authentication</h2>
+    </div>
+    <div class="col-md-6">
+        <p>
+            This section of the API is not currently implemented. This documentation is only written as reference for the development of it. However, this will be usable in the future.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Starting a session <small>POST /session</small></h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Before you can authenticate as a user for API requests, you'll first have to start a session. Basically, this boils down to getting temporary key that gives access to your account. For extra security reasons, this key is then bound to your IP and expires after a certain amount of time of inactivity.
+        </p>
+        <p>
+            Starting a new session will terminate all other open sessions by that user.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Request</h4>
+<pre>{
+    "username": "bobisthebest",
+    "password": "secret123"
+}</pre>
+        <h4>Response</h4>
+<pre>{
+    "key": "4fcf7b20…072afcfc",
+    "expires": "2018-01-25T13:37:07.230Z"
+}</pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Authentication</h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            Some API calls require authentication. These calls are marked with <span class="badge">User Auth</span>, <span class="badge">AI Auth</span> or <span class="badge">User/AI Auth</span> badges if they require user, ai or either user or ai authentication respectively.
+        </p>
+        <p>
+            Authentication is done by using the <code>Authorization</code> HTTP header with your request. As the type you send either <code>user</code> or <code>ai</code> depending on how you wish to authenticate. Your session key is what you should use as your credentials.
+        </p>
+        <p>
+            If you authenticate as AI, there is not really a notion of sessions. You just have to provide the secret key for that AI. This means that AI authentication is less secure than user authentication, but easier. This additional form of authentication is present to allow for easy implementation of a basic client. In the future you'll likely be able to disable AI authentication for your account, if you whish to have the extra security.
+        </p>
+    </div>
+    <div class="col-md-6">
+        <h4>Authentication as user</h4>
+        <pre>Authorization: user 4fcf7b20…072afcfc</pre>
+        <h4>Authentication as AI</h4>
+        <pre>Authorization: ai acbdefg123456</pre>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <h3>Ending a session <small>DEL /session/4fcf7b20…072afcfc</small> <span class="badge"> User Auth</span></h3>
+    </div>
+    <div class="col-md-6">
+        <p>
+            You can let a sessions expire automatically, but if you want to be sure that no one has access to your user account, you can also manually terminate a session.
+        </p>
+    </div>
+    <div class="col-md-6">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
         <h2>AI</h2>
     </div>
 </div>
