@@ -69,7 +69,7 @@ function gameLink(id) {
                                         <% var ai = game.board[z][x][y] %>
                                         <% if (ai == game.ai_a) { %>
                                             <td class="success">&nbsp;</td>
-                                        <% } else if (ai == game.ai_b) { %>
+                                        <% } else if (ai == game.ai_b && game.ai_b) { %>
                                             <td class="danger">&nbsp;</td>
                                         <% } else { %>
                                             <td>&nbsp;</td>
