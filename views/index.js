@@ -4,6 +4,7 @@ const router = express.Router()
 module.exports = router
 const AI = require("../datatypes/ai").AI
 const Game = require("../datatypes/game").Game
+const Error = require("../util/error")
 
 // CSS files
 router.use("/css/", express.static("./views/css"))
@@ -28,7 +29,8 @@ router.get("/", (req, res) => {
 router.get("/documentation", (req, res) => {
     res.render("pages/documentation", {
         links: navLinks,
-        active: "/documentation"
+        active: "/documentation",
+        errors: Error.errors
     })
 })
 
