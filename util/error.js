@@ -19,7 +19,8 @@ const errors = [
     "Invalid username",
     "Invalid mail address",
     "Invalid password",
-    "Username is taken"
+    "Username is taken",
+    "The user could not be found"
 ]
 
 module.exports = {

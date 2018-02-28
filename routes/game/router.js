@@ -7,7 +7,7 @@ const validateGame = require("../../middleware/validate-game")
 router.get("/", require("./list"))
 router.post("/", aiAuth, require("./post"))
 
-router.get("/:gameId", validateGame, require("./get-one"))
-router.use("/:gameId/moves", require("../moves/router"))
+router.get("/:gameId(\\d+)", validateGame, require("./get-one"))
+router.use("/:gameId(\\d+)/moves", require("../moves/router"))
 
 module.exports = router

@@ -4,6 +4,6 @@ const router = express.Router()
 
 router.get("/", require("./list"))
 router.post("/", require("./post"))
-router.get("/:aiId", require("./get-one"))
+router.get("/:aiId(\\d+)", require("./get-one"))
 
 module.exports = router

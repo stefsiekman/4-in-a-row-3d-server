@@ -28,9 +28,40 @@ class User {
             // Save the id of this user
             this.id = result.rows[0].id
 
+            // Remove the password, no need to send that back
+            delete this.password
+
             // Return to the caller
             callback(this)
         })
+    }
+
+    static getOne(res, id, callback) {
+        var sql = "SELECT * FROM users WHERE id=$1;"
+        var values = [ id ]
+
+        pg.query(sql, values, (err, result) => {
+            // Check for errors
+            if (err) {
+                return error.respondJson(res, 1, err)
+            }
+
+            // If no user was found
+            if (result.rows.length < 1) {
+                return callback(undefined)
+            }
+
+            // Otherwise, create and strip the user
+            var user = this.fromRow(result.rows[0])
+            delete user.mail
+            callback(user)
+        })
+    }
+
+    static fromRow(row) {
+        var user = new User(row.username, row.mail, undefined)
+        delete user.password
+        return user
     }
 
     static isUsernameAvailable(res, username, callback) {
