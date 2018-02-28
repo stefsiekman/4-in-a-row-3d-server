@@ -14,7 +14,12 @@ const errors = [
     "Missing position",
     "Invalid position",
     "Impossible move (already for balls at position)",
-    "Unknown AI id"
+    "Unknown AI id",
+    "Not enough user fields provided",
+    "Invalid username",
+    "Invalid mail address",
+    "Invalid password",
+    "Username is taken"
 ]
 
 module.exports = {

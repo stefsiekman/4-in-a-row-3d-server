@@ -21,6 +21,7 @@ app.use("/", require("./views/index.js"))
 
 // API routes
 app.use(express.json())
+app.use("/api/user", require("./routes/user/router"))
 app.use("/api/ai", require("./routes/ai/router"))
 app.use("/api/game", require("./routes/game/router"))
 
