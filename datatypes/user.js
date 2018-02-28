@@ -83,6 +83,30 @@ class User {
         })
     }
 
+    static validateCredentials(res, username, password, callback) {
+        // We have to get the concerning user
+        var sql = "SELECT * FROM users WHERE username=$1;"
+        var values = [ username ]
+        pg.query(sql, values, (err, result) => {
+            // Check for errors
+            if (err) {
+                return error.respondJson(res, 1, err)
+            }
+
+            // In case we didn't even find the username
+            if (!result.rows[0]) {
+                return callback(false);
+            }
+
+            // Otherwise, we'll have to match the password with the salted saved one
+            var row = result.rows[0]
+            var saltedPassword = sha(password + row.salt)
+
+            // Return whether they math
+            callback(saltedPassword === row.password)
+        })
+    }
+
 }
 
 module.exports = User

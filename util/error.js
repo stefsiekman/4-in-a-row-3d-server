@@ -20,7 +20,9 @@ const errors = [
     "Invalid mail address",
     "Invalid password",
     "Username is taken",
-    "The user could not be found"
+    "The user could not be found",
+    "Starting a session requires a username and password",
+    "Invalid user credentials provided"
 ]
 
 module.exports = {
