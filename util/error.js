@@ -76,7 +76,7 @@ const errors = [
         message: "Invalid password",
         status: 400
     },
-    {
+    { // #20
         message: "Username is taken",
         status: 403
     },
@@ -91,6 +91,14 @@ const errors = [
     {
         message: "Invalid user credentials provided",
         status: 403
+    },
+    {
+      message: "Invalid authorization header",
+      status: 400
+    },
+    { // #25
+      message: "Invalid authentication type",
+      status: 400
     }
 ]
 
